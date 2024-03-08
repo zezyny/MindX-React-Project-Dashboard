@@ -1,0 +1,138 @@
+:root {
+  --main: #1F95F5;
+  --dark0: #2A3650;
+  --dark1: #374462;
+  --background0: #EDF0F5;
+  --grey: #9B9B9B;
+  --background1: #fff;
+  --sidebar-width: 256px;
+}
+
+* {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background0);
+  transition: ease-in 0.3s;
+}
+
+/* ========================CSS Sidebar=========================== */
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  width: 256px;
+  height: 100vh;
+  background-color: var(--dark0);
+  position: fixed;
+  left: 0;
+  top: 0;
+  align-items: center;
+  z-index: 10;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+/* .nav-container ul {
+  background-color: var(--dark0);
+} */
+
+.ant-menu {
+  margin-top: 30px;
+}
+
+/* .ant-menu.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+  background-color: var(--dark1);
+} */
+
+.nav-container img {
+  width: 100px;
+  padding: 10px 60px;
+  background-color: var(--background0);
+  border-radius: 15px;
+  margin-top: 20px;
+}
+
+/* ========================CSS Header=========================== */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--background1);
+  z-index: 9;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.header-content {
+  margin: 15px 20px 15px 276px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-content h1 {
+  font-size: 20px;
+}
+
+.header-nav a {
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.header-nav .active {
+  color: var(--main);
+  font-size: 14px;
+}
+
+.header-nav span {
+  font-size: 14px;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.header-menu svg {
+  width: 20px;
+  height: 20px;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.header-user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.header-user-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-user-detail h2 {
+  font-size: 16px;
+}
+
+.header-user-detail p {
+  font-size: 13px;
+}
+
+/* ========================CSS Body=========================== */
+.product-content {
+  margin-top: 80px;
+  margin-left: 260px;
+  width: calc(100%-(var(--sidebar-width)));
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
