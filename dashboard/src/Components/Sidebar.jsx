@@ -39,7 +39,7 @@ export default function Sidebar() {
 
     return (
         <div className='nav-container'>
-            <img src="./src/assets/logo-regular.png" alt="logo" />
+            <img src="https://websitedemos.net/furniture-shop-04/wp-content/uploads/sites/1116/2022/07/logo-regular.png" alt="logo" />
             <Menu
                 defaultSelectedKeys={['1']}
                 mode="inline"

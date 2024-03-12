@@ -8,6 +8,8 @@ import Message from './Pages/Message.jsx';
 import Customer from './Pages/Customer.jsx';
 import ErrorPage from './Pages/ErrorPage.jsx';
 import NewProduct from './Pages/NewProduct.jsx';
+import DetailProduct from './Pages/DetailProduct.jsx';
+import Result from './Pages/Result.jsx';
 
 function App() {
 
@@ -18,6 +20,8 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/new" element={<NewProduct />} />
+        <Route path="/result" element={<Result />} />
+        <Route path="/products/detail/:id" element={<DetailProduct />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/message" element={<Message />} />
         <Route path="/customer" element={<Customer />} />

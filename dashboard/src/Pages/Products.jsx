@@ -2,10 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import Header from '../Components/Header'
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { FirebaseContext } from '../Context/FirebaseProvider'
-import { onSnapshot, query } from 'firebase/firestore'
+import { deleteDoc, doc, onSnapshot, query } from 'firebase/firestore'
 import { Table, Button, Image, Input, Popconfirm } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Column from 'antd/es/table/Column';
 export default function Products() {
+    const navigate = useNavigate()
     let [product, setProduct] = useState([])
     const [searchInput, setSearchInput] = useState("")
     const { messCollect } = useContext(FirebaseContext)
@@ -19,17 +21,21 @@ export default function Products() {
             setProduct(temp)
         });
     }, [searchInput])
-
+    console.log(product);
     // handle table================================
     const columns = [
-
+        {
+            title: 'Image',
+            dataIndex: 'img',
+            width: '10%',
+            align: 'center'
+        },
         {
             title: 'Product',
             dataIndex: 'products',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.products.localeCompare(b.products),
             width: '30%',
-            render: (text) => <Link to={'/products/detail/:id'}>{text}</Link>
+            render: (text, record) => <Link to={`/products/detail/${record.key}`}>{text}</Link>
         },
         {
             title: 'Category',
@@ -37,15 +43,8 @@ export default function Products() {
             width: '15%',
         },
         {
-            title: 'Image',
-            dataIndex: 'img',
-            width: '20%',
-            align: 'center'
-        },
-        {
             title: 'Stock',
             dataIndex: 'stock',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.stock - b.stock,
             width: '10%',
             align: 'center'
@@ -53,7 +52,6 @@ export default function Products() {
         {
             title: 'Price',
             dataIndex: 'price',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.price - b.price,
             width: '10%',
             align: 'center'
@@ -71,18 +69,21 @@ export default function Products() {
             align: 'center'
         },
     ]
-    let dataTable = product.map((item) => {
+    let dataTable = product.map((item, index) => {
         return {
             key: `${item.id}`,
             products: `${item.productName}`,
-            img: <div>
-                <Image.PreviewGroup preview={{
-                    onChange: (current, prev) => console.log(`current index: ${current}, prev index: ${prev}`),
-                }} />
-                <Image src={item.img[0]} width={'30%'} />
-                <Image src={item.img[1]} width={'30%'} />
-                <Image src={item.img[2]} width={'30%'} />
-            </div>,
+            img:
+                <Image.PreviewGroup
+                    items={[
+                        `${item.img[0]}`,
+                        `${item.img[1]}`,
+                        `${item.img[2]}`
+                    ]}
+                >
+                    <Image src={item.img[0]} width={'70%'} />
+                </Image.PreviewGroup>
+            ,
             category: `${item.categories}`,
             price: `$${item.price}`,
             discount: `${item.discount}%`,
@@ -93,8 +94,9 @@ export default function Products() {
                     description="Are you sure to delete this product?"
                     okText="Yes"
                     cancelText="No"
+                    onConfirm={() => { handleDelete(item.id) }}
                 >
-                    <Button onClick={() => { handleDelete(item.id) }} danger style={{ fontSize: '16px' }}><MdDelete /></Button>
+                    <Button danger style={{ fontSize: '16px' }}><MdDelete /></Button>
                 </Popconfirm>
             </div>
         }
@@ -113,12 +115,10 @@ export default function Products() {
     }
 
     // handle delete
-    const handleDelete = (id) => {
-        let newProductList = product.filter((item) => {
-            item.id != id
-        })
-        setProduct(newProductList)
+    const handleDelete = async (id) => {
+        await deleteDoc(doc(messCollect, id));
     }
+
 
     // breadcrumb=====================
     const breadcrumb = [
@@ -132,7 +132,7 @@ export default function Products() {
     return (
         <div>
             <Header title='Products' breadcrumb={breadcrumb} />
-            <div className="product-content" >
+            <div className="body-content" >
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
                     <Input.Search
                         placeholder='Search products...'
@@ -145,6 +145,7 @@ export default function Products() {
                     <Button
                         type='primary'
                         style={{ flex: 1, margin: '10px 0' }}
+                        onClick={() => { navigate('/products/new') }}
                     >
                         Add new product
                     </Button>
@@ -153,11 +154,12 @@ export default function Products() {
                     columns={columns}
                     dataSource={dataTable}
                     pagination={{
-                        current: 1,
                         pageSize: 10,
                         position: ['bottomCenter']
                     }}
-                />
+                >
+
+                </Table>
             </div>
         </div>
     )

@@ -14,10 +14,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             darkItemBg: 'var(--dark0)',
             darkSubMenuItemBg: 'var(--dark0)',
             darkItemSelectedBg: 'var(--dark1)',
-            darkItemSelectedColor: 'var(--main)'
           },
           Button: {
             colorPrimary: 'var(--main)'
+          },
+          Result: {
+            subtitleFontSize: '18px'
           }
         }
       }}

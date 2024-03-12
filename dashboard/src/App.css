@@ -126,10 +126,11 @@ body {
 }
 
 /* ========================CSS Body=========================== */
-.product-content {
+.body-content {
   margin-top: 80px;
   margin-left: 260px;
   width: calc(100%-(var(--sidebar-width)));
+  padding: 20px;
 }
 
 .product-info {
