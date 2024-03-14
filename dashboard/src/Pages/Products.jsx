@@ -3,7 +3,7 @@ import Header from '../Components/Header'
 import { MdDelete, MdModeEditOutline } from "react-icons/md";
 import { FirebaseContext } from '../Context/FirebaseProvider'
 import { deleteDoc, doc, onSnapshot, query } from 'firebase/firestore'
-import { Table, Button, Image, Input, Popconfirm } from 'antd'
+import { Table, Button, Image, Input, Popconfirm, Tag } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import Column from 'antd/es/table/Column';
 export default function Products() {
@@ -41,6 +41,46 @@ export default function Products() {
             title: 'Category',
             dataIndex: 'category',
             width: '15%',
+            filters: [
+                {
+                    value: 'Decor',
+                    text: 'Decor'
+                },
+                {
+                    value: 'Bedroom',
+                    text: 'Bedroom'
+                },
+                {
+                    value: 'Office',
+                    text: 'Office'
+                },
+                {
+                    value: 'Living Room',
+                    text: 'Living Room'
+                },
+            ],
+            filterSearch: true,
+            onFilter: (value, record) => record.category.includes(value),
+            render: (_, { category }) => (
+                <div>
+                    {category.map((category) => {
+                        let color = ''
+                        if (category === 'Decor') {
+                            color = 'red';
+                        }
+                        if (category === 'Bedroom') {
+                            color = 'blue';
+                        }
+                        if (category === 'Office') {
+                            color = 'gold';
+                        }
+                        if (category === 'Living Room') {
+                            color = 'green';
+                        }
+                        return <Tag style={{ marginTop: '5px' }} color={color} key={category}>{category}</Tag>
+                    })}
+                </div>
+            )
         },
         {
             title: 'Stock',
@@ -54,7 +94,8 @@ export default function Products() {
             dataIndex: 'price',
             sorter: (a, b) => a.price - b.price,
             width: '10%',
-            align: 'center'
+            align: 'center',
+            render: (text) => <p>${text}</p>
         },
         {
             title: 'Discount',
@@ -84,8 +125,8 @@ export default function Products() {
                     <Image src={item.img[0]} width={'70%'} />
                 </Image.PreviewGroup>
             ,
-            category: `${item.categories}`,
-            price: `$${item.price}`,
+            category: item.categories,
+            price: `${item.price}`,
             discount: `${item.discount}%`,
             stock: `${item.stock}`,
             delete: <div>
