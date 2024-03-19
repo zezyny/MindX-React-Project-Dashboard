@@ -3,9 +3,14 @@ import Header from '../Components/Header'
 import { FirebaseContext } from '../Context/FirebaseProvider'
 import { addDoc, onSnapshot, query } from 'firebase/firestore'
 import { Link, useNavigate } from 'react-router-dom'
-import { Button, ColorPicker, Form, Input, InputNumber, Select, Tag } from 'antd';
+import { Button, ColorPicker, Form, Input, InputNumber, Select, Modal, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea'
+import { PlusOutlined } from '@ant-design/icons';
+
 export default function NewProduct() {
+    const [imageUrl1, setImageUrl1] = useState('');
+    const [imageUrl2, setImageUrl2] = useState('');
+    const [imageUrl3, setImageUrl3] = useState('');
     let [product, setProduct] = useState([])
     const { messCollect } = useContext(FirebaseContext)
     const navigate = useNavigate()
@@ -19,16 +24,42 @@ export default function NewProduct() {
             setProduct(temp)
         });
     }, [])
+
+
+    //button upload
+    const handleChange = async (e, setImageUrl) => {
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch('https://api.imgbb.com/1/upload?key=540b52f6ae3b8f1a483ead4acfa31ef3', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setImageUrl(data.data.url);
+            } else {
+                console.error('Upload failed:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
+    };
+
     // breadcrumb=====================
     const breadcrumb = [
         {
-            title: <Link to={'/'}>Dashboard</Link>
+            title: <Link to={'/dashboard'}>Dashboard</Link>
         },
         {
             title: <Link to={'/products'}>Products</Link>
         },
         {
-            title: 'New products'
+            title: <span style={{ color: 'var(--main)' }}>New products</span>
         }
     ]
     //category===========================
@@ -53,6 +84,8 @@ export default function NewProduct() {
 
     // handle add product========================
     const addNewProduct = async (value) => {
+        // console.log(imageUrl1, imageUrl2, imageUrl3);
+        // console.log(value);
         await addDoc(messCollect, {
             productName: value.name,
             description: value.description,
@@ -61,9 +94,9 @@ export default function NewProduct() {
             stock: value.quantity,
             categories: value.categories,
             img: [
-                value.link1,
-                value.link2,
-                value.link3
+                imageUrl1,
+                imageUrl2,
+                imageUrl3
             ],
             productColor: [
                 {
@@ -194,8 +227,8 @@ export default function NewProduct() {
                     <Form.Item
                         label='Variation'
                     >
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Form.Item style={{ maxWidth: '300px', display: 'flex', gap: '5px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+                            <Form.Item style={{ width: '200px' }}>
                                 <Form.Item
                                     name='color1'
                                     rules={[
@@ -223,14 +256,24 @@ export default function NewProduct() {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please input image link!'
+                                            message: 'Please upload image!'
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Image Link' />
+
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl1) }} />
+                                        <br />
+                                        {imageUrl1 && <img
+                                            src={imageUrl1}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+                                        />}
+                                    </div>
+
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item style={{ maxWidth: '300px' }}>
+                            <Form.Item style={{ width: '200px' }}>
                                 <Form.Item
                                     name='color2'
                                     rules={[
@@ -258,14 +301,22 @@ export default function NewProduct() {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please input image link!'
+                                            message: 'Please upload image!'
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Image Link' />
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl2) }} />
+                                        <br />
+                                        {imageUrl2 && <img
+                                            src={imageUrl2}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+                                        />}
+                                    </div>
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item style={{ maxWidth: '300px' }}>
+                            <Form.Item style={{ width: '200px' }}>
                                 <Form.Item
                                     name='color3'
                                     rules={[
@@ -293,11 +344,20 @@ export default function NewProduct() {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please input image link!'
+                                            message: 'Please upload image!'
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Image Link' />
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl3) }} />
+                                        <br />
+                                        {imageUrl3 && <img
+                                            src={imageUrl3}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+
+                                        />}
+                                    </div>
                                 </Form.Item>
                             </Form.Item>
                         </div>

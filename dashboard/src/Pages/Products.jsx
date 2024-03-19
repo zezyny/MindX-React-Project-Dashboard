@@ -110,7 +110,7 @@ export default function Products() {
             align: 'center'
         },
     ]
-    let dataTable = product.map((item, index) => {
+    let dataTable = product.map((item) => {
         return {
             key: `${item.id}`,
             products: `${item.productName}`,
@@ -164,10 +164,10 @@ export default function Products() {
     // breadcrumb=====================
     const breadcrumb = [
         {
-            title: <Link to={'/'}>Dashboard</Link>
+            title: <Link to={'/dashboard'}>Dashboard</Link>
         },
         {
-            title: 'Products'
+            title: <span style={{ color: 'var(--main)' }}>Products</span>
         }
     ]
     return (

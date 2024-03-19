@@ -9,7 +9,6 @@ export default function DetailProduct() {
     const param = useParams()
     const { messCollect } = useContext(FirebaseContext)
     const navigate = useNavigate()
-
     let singledoc = doc(messCollect, param.id)
     let [mess, setmess] = useState(null)
     useEffect(() => {
@@ -19,6 +18,11 @@ export default function DetailProduct() {
         }
         getmess()
     }, [])
+
+    const [imageUrl1, setImageUrl1] = useState('');
+    const [imageUrl2, setImageUrl2] = useState('');
+    const [imageUrl3, setImageUrl3] = useState('');
+    // console.log(imageUrl1);
     // console.log(mess);
     const options = [
         {
@@ -42,15 +46,38 @@ export default function DetailProduct() {
     // breadcrumb=====================
     const breadcrumb = [
         {
-            title: <Link to={'/'}>Dashboard</Link>
+            title: <Link to={'/dashboard'}>Dashboard</Link>
         },
         {
             title: <Link to={'/products'}>Products</Link>
         },
         {
-            title: <span>{mess?.productName}</span>
+            title: <span style={{ color: 'var(--main)' }}>{mess?.productName}</span>
         }
     ]
+
+    const handleChange = async (e, setImageUrl) => {
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch('https://api.imgbb.com/1/upload?key=540b52f6ae3b8f1a483ead4acfa31ef3', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setImageUrl(data.data.url);
+            } else {
+                console.error('Upload failed:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
+    };
     const [form] = Form.useForm()
     useEffect(() => {
         form.setFieldsValue({
@@ -66,16 +93,19 @@ export default function DetailProduct() {
             var1: mess?.productColor[0].nameColor,
             var2: mess?.productColor[1].nameColor,
             var3: mess?.productColor[2].nameColor,
-            link1: mess?.img[0],
-            link2: mess?.img[1],
-            link3: mess?.img[2],
+            // link1: mess?.img[0],
+            // link2: mess?.img[1],
+            // link3: mess?.img[2],
             id: param?.id,
         }
         )
+        setImageUrl1(mess?.img[0])
+        setImageUrl2(mess?.img[1])
+        setImageUrl3(mess?.img[2])
     }, [mess])
     const updateItem = async (value) => {
-        console.log(typeof (value.color1))
-        // Dữ liệu mới bạn muốn cập nhật
+        // console.log(imageUrl1);
+        // console.log(mess)
         const newData = {
             productName: value.productName,
             description: value.description,
@@ -84,9 +114,9 @@ export default function DetailProduct() {
             stock: value.quantity,
             categories: value.categories,
             img: [
-                value.link1,
-                value.link2,
-                value.link3
+                imageUrl1,
+                imageUrl2,
+                imageUrl3
             ],
             productColor: [
                 {
@@ -229,7 +259,7 @@ export default function DetailProduct() {
                         label='Variation'
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Form.Item style={{ maxWidth: '300px', display: 'flex', gap: '5px' }}>
+                            <Form.Item style={{ maxWidth: '200px' }}>
                                 <Form.Item
                                     name='color1'
                                     rules={[
@@ -254,17 +284,19 @@ export default function DetailProduct() {
                                 </Form.Item>
                                 <Form.Item
                                     name='link1'
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input image link!'
-                                        }
-                                    ]}
                                 >
-                                    <Input placeholder='Image Link' />
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl1) }} />
+                                        <br />
+                                        {imageUrl1 && <img
+                                            src={imageUrl1}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+                                        />}
+                                    </div>
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item style={{ maxWidth: '300px' }}>
+                            <Form.Item style={{ maxWidth: '200px' }}>
                                 <Form.Item
                                     name='color2'
                                     rules={[
@@ -289,17 +321,19 @@ export default function DetailProduct() {
                                 </Form.Item>
                                 <Form.Item
                                     name='link2'
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input image link!'
-                                        }
-                                    ]}
                                 >
-                                    <Input placeholder='Image Link' />
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl2) }} />
+                                        <br />
+                                        {imageUrl2 && <img
+                                            src={imageUrl2}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+                                        />}
+                                    </div>
                                 </Form.Item>
                             </Form.Item>
-                            <Form.Item style={{ maxWidth: '300px' }}>
+                            <Form.Item style={{ maxWidth: '200px' }}>
                                 <Form.Item
                                     name='color3'
                                     rules={[
@@ -324,14 +358,16 @@ export default function DetailProduct() {
                                 </Form.Item>
                                 <Form.Item
                                     name='link3'
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please input image link!'
-                                        }
-                                    ]}
                                 >
-                                    <Input placeholder='Image Link' />
+                                    <div>
+                                        <input type="file" onChange={() => { handleChange(event, setImageUrl3) }} />
+                                        <br />
+                                        {imageUrl3 && <img
+                                            src={imageUrl3}
+                                            alt="Uploaded Image"
+                                            style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10%', border: '1px solid #ccc' }}
+                                        />}
+                                    </div>
                                 </Form.Item>
                             </Form.Item>
                         </div>

@@ -10,6 +10,8 @@ import ErrorPage from './Pages/ErrorPage.jsx';
 import NewProduct from './Pages/NewProduct.jsx';
 import DetailProduct from './Pages/DetailProduct.jsx';
 import Result from './Pages/Result.jsx';
+import Login from './Pages/Login.jsx';
+import DetailCustomer from './Pages/DetailCustomer.jsx';
 
 function App() {
 
@@ -17,7 +19,8 @@ function App() {
     <BrowserRouter>
       <Sidebar />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/new" element={<NewProduct />} />
         <Route path="/result" element={<Result />} />
@@ -25,6 +28,7 @@ function App() {
         <Route path="/orders" element={<Order />} />
         <Route path="/message" element={<Message />} />
         <Route path="/customer" element={<Customer />} />
+        <Route path="/customer/detail/:id" element={<DetailCustomer />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </BrowserRouter>

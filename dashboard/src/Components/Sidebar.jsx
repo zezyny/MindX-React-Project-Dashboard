@@ -14,7 +14,7 @@ export default function Sidebar() {
         };
     }
     const items = [
-        getItem(<Link to={'/'}>Dashboard</Link>, '1', <IoHome />),
+        getItem(<Link to={'/dashboard'}>Dashboard</Link>, '1', <IoHome />),
         getItem('Products', 'sub2', <FaBoxArchive />, [
             getItem(<Link to={'/products'}>All products</Link>, '2'),
             getItem(<Link to={'/products/new'}>Add new products</Link>, '3'),
@@ -26,7 +26,7 @@ export default function Sidebar() {
             getItem('Canceled', '7'),
         ]),
         getItem('Customers', 'sub4', <FaUserTag />, [
-            getItem('All customers', '8'),
+            getItem(<Link to={'/customer'}>All customers</Link>, '8'),
             getItem('Loyal customers', '9'),
             getItem('New customers', '10')
         ]),

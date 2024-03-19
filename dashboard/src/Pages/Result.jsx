@@ -16,7 +16,7 @@ export default function ResultPage() {
                         size='large'
                         type="primary"
                         key='dashboard'
-                        onClick={() => { navigate('/') }}>
+                        onClick={() => { navigate('/dashboard') }}>
                         Back to dashboard
                     </Button>,
                     <Button
