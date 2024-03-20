@@ -128,14 +128,7 @@ export default function Customer() {
             ),
     });
     const columns = [
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            width: '10%',
-            align: 'center',
-            key: 'key',
-            render: (text, record) => <Link to={`/customer/detail/${record.key}`}>{text.toUpperCase()}</Link>
-        },
+
         {
             title: 'Customer Name',
             dataIndex: 'customerName',
@@ -170,7 +163,6 @@ export default function Customer() {
     let dataTable = customers.map((item) => {
         return {
             key: item.id,
-            id: item.costumer.id,
             customerName: `${item.costumer.firstname} ${item.costumer.lastname}`,
             mail: item.costumer.customer,
             phone: item.costumer.phone,
