@@ -73,7 +73,9 @@ export default function DetailCustomer() {
             render: (text, record) => <div style={{
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center'
-            }}><div style={{ width: '30px', height: '30px', background: `${text}`, clipPath: 'circle(50%)' }}></div><p>{record.colorName.charAt(0).toUpperCase() + record.colorName.slice(1)}</p></div>
+            }}><div style={{
+                width: '25px', height: '25px', background: `${text}`, clipPath: 'circle(50%)', marginBottom: '3px'
+            }}></div><p>{record.colorName.charAt(0).toUpperCase() + record.colorName.slice(1)}</p></div>
         },
         {
             title: 'Amount',

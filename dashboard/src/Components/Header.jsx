@@ -54,7 +54,7 @@ export default function Header(props) {
                     >
                         <img src="/logo.svg" alt="" />
                         <div className="header-user-detail">
-                            <h2>{user.username}</h2>
+                            <h2>{user.gmail}</h2>
                             <p>{user.role}</p>
                         </div>
                     </Popover>
