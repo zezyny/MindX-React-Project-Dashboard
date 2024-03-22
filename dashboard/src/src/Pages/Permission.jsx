@@ -277,8 +277,8 @@ export default function Permission() {
 
                         </Table>
                     </div> : <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                        <img style={{ width: '300px' }} src="https://static.vecteezy.com/system/resources/thumbnails/027/147/976/small_2x/access-denied-transparent-red-rubber-stamp-free-png.png" alt="" />
-                        <h2 style={{ color: 'var(--main)' }}>You do not have permission to access!</h2>
+                        <img style={{ width: '500px' }} src="https://static.vecteezy.com/system/resources/thumbnails/027/147/976/small_2x/access-denied-transparent-red-rubber-stamp-free-png.png" alt="" />
+                        <h2 style={{ color: 'red' }}>You do not have permission to access!</h2>
                     </div>}
             </div>
         </div>

@@ -217,7 +217,7 @@ export default function DetailCustomer() {
             title: <Link to={'/customer'}>Customers</Link>
         },
         {
-            title: <span style={{ color: 'var(--main)' }}>Customer Detail</span>
+            title: <span style={{ color: 'var(--main)' }}>Detail Customer</span>
         }
     ]
     return (

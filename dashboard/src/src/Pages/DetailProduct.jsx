@@ -23,7 +23,7 @@ export default function DetailProduct() {
     const [imageUrl2, setImageUrl2] = useState('');
     const [imageUrl3, setImageUrl3] = useState('');
     // console.log(imageUrl1);
-    // console.log(mess);
+    // console.log(messCollect);
     const options = [
         {
             value: 'Decor',
@@ -52,7 +52,7 @@ export default function DetailProduct() {
             title: <Link to={'/products'}>Products</Link>
         },
         {
-            title: <span style={{ color: 'var(--main)' }}>Product Detail</span>
+            title: <span style={{ color: 'var(--main)' }}>Detail Product</span>
         }
     ]
 

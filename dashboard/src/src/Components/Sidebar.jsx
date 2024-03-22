@@ -21,7 +21,7 @@ export default function Sidebar() {
         ]),
         getItem(<Link to={'/orders'}>Orders</Link>, '4', <FaCartShopping />),
         getItem(<Link to={'/customer'}>Customers</Link>, '5', <FaUserTag />),
-        getItem(<Link to={'/permission'}>Permission</Link>, '6', <FaKey />),
+        getItem(<Link to={'/permission'}>Permision</Link>, '6', <FaKey />),
     ];
 
     return (

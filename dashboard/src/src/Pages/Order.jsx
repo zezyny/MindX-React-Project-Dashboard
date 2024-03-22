@@ -49,7 +49,6 @@ export default function Order() {
         }
     })
     console.log(customers);
-
     const columns = [
         {
             title: 'ID',
@@ -78,8 +77,7 @@ export default function Order() {
         {
             title: 'Total',
             dataIndex: 'total',
-            align: 'center',
-            width: '10%',
+            width: '150px',
             render: (text) => <p>${text.toFixed(2)}</p>
         }
     ]
@@ -88,7 +86,7 @@ export default function Order() {
         item.cart.forEach((it) => sum += it.price * it.amount * (100 - it.discount) / 100)
         return {
             id: item.id,
-            key: item.id,
+            key: item.costumer.id,
             customerName: `${item.costumer.firstname} ${item.costumer.lastname}`,
             mail: item.costumer.customer,
             phone: item.costumer.phone,
@@ -176,15 +174,12 @@ export default function Order() {
                                         {
                                             title: 'Image',
                                             dataIndex: 'img',
-                                            align: 'center',
-                                            width: '10%',
                                             render: (text) => <Image src={text} style={{ width: '50px' }} />
                                         },
                                         {
                                             title: 'Color',
                                             dataIndex: 'color',
                                             align: 'center',
-                                            width: '10%',
                                             render: (text, record) => <div style={{
                                                 display: 'flex', flexDirection: 'column',
                                                 alignItems: 'center'
@@ -195,28 +190,25 @@ export default function Order() {
                                         {
                                             title: 'Amount',
                                             dataIndex: 'amount',
-                                            align: 'center',
-                                            width: '10%',
+                                            align: 'center'
                                         },
                                         {
                                             title: 'Price',
                                             dataIndex: 'price',
                                             align: 'center',
-                                            width: '10%',
                                             render: (text) => <p>${text}</p>
                                         },
                                         {
                                             title: 'Discount',
                                             dataIndex: 'discount',
                                             align: 'center',
-                                            width: '10%',
                                             render: (text) => <p>{text}%</p>
                                         },
                                         {
                                             title: 'Subtotal',
                                             dataIndex: 'subtotal',
                                             align: 'center',
-                                            width: '10%',
+                                            width: '150px',
                                             render: (text) => <p>${text.toFixed(2)}</p>
                                         }
 
