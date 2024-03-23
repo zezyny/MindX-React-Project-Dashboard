@@ -69,8 +69,9 @@ export default function Dashboard() {
         {
             title: 'Sold',
             dataIndex: 'qtt',
-            sortOrder: (a, b) => a.qtt - b.qtt,
             align: 'center',
+            sorter: (a, b) => a.qtt - b.qtt,
+            sortOrder: 'descend',
         }
     ]
 

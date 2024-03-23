@@ -48,7 +48,6 @@ export default function Order() {
             }
         }
     })
-    console.log(customers);
 
     const columns = [
         {
@@ -110,10 +109,11 @@ export default function Order() {
     ]
     return (
         <div>
-            <Header title='Order' breadcrumb={breadcrumb} />
+            <Header title={`Order - Total: ${customers.length + 1}`} breadcrumb={breadcrumb} />
             <div className='body-content'>
                 <Table
                     bordered
+                    pagination={{ position: ['bottomCenter'], total: `${customers.length + 1}`, showTotal: (total) => { `Total ${total} orders` } }}
                     dataSource={dataTable}
                     columns={columns}
                     expandable={{

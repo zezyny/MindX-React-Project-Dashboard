@@ -20,31 +20,38 @@ export default function DetailCustomer() {
             setProduct(temp)
         });
     }, [])
-    let singledoc = doc(customer, id)
     useEffect(() => {
-        let getmess = async () => {
-            const data = await getDoc(singledoc)
-            setCtm(data.data())
-        }
-        getmess()
+        const q = query(customer);
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const temp = [];
+            querySnapshot.forEach((doc) => {
+                temp.push({ ...doc.data(), id: doc.id });
+            });
+            setCtm(temp)
+        });
     }, [])
-    // let [ctmCart, setCtmCart] = useState([])
-    let ctmCart = []
-    for (let i = 0; i < product?.length; i++) {
-        for (let j = 0; j < ctm?.cart.length; j++) {
-            if (product[i].id == ctm.cart[j].id) {
-                let imgIndex = product[i].productColor.findIndex((item) => { return item.colorCode == ctm?.cart[j].color })
-                let temp = {
-                    product: product[i],
-                    amount: ctm?.cart[j].amount,
-                    color: ctm?.cart[j].color,
-                    imgIndex: imgIndex,
+    // console.log(ctm);
+    let [ctmCart, setCtmCart] = useState([])
+    let temp = []
+    useEffect(() => {
+        temp = ctm?.filter((item) => {
+            return item.costumer.customer === id
+        }
+        )
+        for (let i = 0; i < temp?.length; i++) {
+            for (let j = 0; j < temp[i]?.cart.length; j++) {
+                for (let k = 0; k < product.length; k++) {
+
+                    if (product[k].id == temp[i]?.cart[j].id) {
+                        Object.assign(temp[i].cart[j], product[k])
+                    }
                 }
-                ctmCart.push(temp)
             }
         }
-    }
-    // console.log(ctmCart);
+        // return temp
+        setCtmCart(temp)
+    }, [ctm])
+    console.log(ctmCart);
     const columns = [
         {
             title: 'No.',
@@ -59,17 +66,22 @@ export default function DetailCustomer() {
         {
             title: 'Product Name',
             dataIndex: 'productName',
+            align: 'center',
+            width: '20%',
             render: (text, record) => <Link to={`/products/detail/${record.key}`}>{text}</Link>
         },
         {
             title: 'Image',
             dataIndex: 'img',
+            align: 'center',
+            width: '10%',
             render: (text) => <Image src={text} style={{ width: '60px' }} />
         },
         {
             title: 'Color',
             dataIndex: 'color',
             align: 'center',
+            width: '10%',
             render: (text, record) => <div style={{
                 display: 'flex', flexDirection: 'column',
                 alignItems: 'center'
@@ -80,111 +92,110 @@ export default function DetailCustomer() {
         {
             title: 'Amount',
             dataIndex: 'amount',
-            align: 'center'
+            align: 'center',
+            width: '10%',
         },
         {
             title: 'Price',
             dataIndex: 'price',
             align: 'center',
+            width: '10%',
             render: (text) => <p>${text}</p>
         },
         {
             title: 'Discount',
             dataIndex: 'discount',
             align: 'center',
+            width: '10%',
             render: (text) => <p>{text}%</p>
         },
         {
             title: 'Subtotal',
             dataIndex: 'subTotal',
             align: 'center',
+            width: '10%',
             render: (text) => <p>${text}</p>
         }
     ]
-    let dataTable = ctmCart.map((item, index) => {
-        return {
-            index: index + 1,
-            key: item.product.id,
-            productName: item.product.productName,
-            img: item.product.img[item.imgIndex],
-            color: item.color,
-            colorName: item.product.productColor[item.imgIndex].nameColor,
-            amount: item.amount,
-            price: item.product.price,
-            discount: item.product.discount,
-            subTotal: `${item.product.price * item.amount * (100 - item.product.discount) / 100}`
-        }
-    })
-    // console.log(dataTable);
-    const items = [
-        {
-            key: '1',
-            label: 'Customer Name',
-            children: `${ctm?.costumer.firstname} ${ctm?.costumer.lastname}`
-        },
-        {
-            key: '2',
-            label: 'Customer ID',
-            children: `${id.toUpperCase()}`
-        },
-        {
-            key: '3',
-            label: 'Email',
-            children: <a href={`mailto:${ctm?.costumer.customer}`}>{ctm?.costumer.customer}</a>
-        },
-        {
-            key: '4',
-            label: 'Phone',
-            children: <a href={`tel:${ctm?.costumer.phone}`}>{ctm?.costumer.phone}</a>
-        },
-        {
-            key: '5',
-            label: 'Note',
-            children: ctm?.costumer.note
-        },
-        {
-            key: '6',
-            label: 'Address',
-            children: `${ctm?.costumer.house}, ${ctm?.costumer.towncity}, ${ctm?.costumer.state}, ${ctm?.costumer.country}, ZIP Code: ${ctm?.costumer.zip}`
-        },
-    ]
+
     const renderCtmInfo = () => {
         return <Descriptions
             title='Customer Info'
-            items={items}
+            items={
+                [
+                    {
+                        key: ctmCart[0]?.id + 1,
+                        label: 'Customer ID',
+                        children: ctmCart[0]?.id.toUpperCase()
+                    },
+                    {
+                        key: ctmCart[0]?.id + 2,
+                        label: 'Customer Name',
+                        children: `${ctmCart[0]?.costumer.firstname} ${ctmCart[0]?.costumer.lastname}`
+                    },
+                    {
+                        key: ctmCart[0]?.id + 3,
+                        label: 'Email',
+                        children: ctmCart[0]?.costumer.customer
+                    },
+                ]}
             style={{
                 backgroundColor: 'var(--background1)',
                 padding: '30px',
-                borderRadius: '20px'
+                borderRadius: '10px'
             }}
         />
     }
     const renderCtmCart = () => {
-        return <div
-            style={{
-                backgroundColor: 'var(--background1)',
-                padding: '30px',
-                borderRadius: '20px',
-                marginTop: '20px'
-            }}>
-            <h4 style={{ marginBottom: '30px' }}>{`${ctm?.costumer.firstname}'s Order`}</h4>
-            <Table
+        return ctmCart?.map((item) => {
+            let dataTable = item?.cart.map((it, index) => {
+                let imgIndex = it?.productColor.findIndex((i) => i.colorCode == it.color)
+                // console.log(imgIndex);
+                return {
+                    index: index + 1,
+                    key: it.id,
+                    productName: it.productName,
+                    img: it.img[imgIndex],
+                    color: it.color,
+                    colorName: it.productColor[imgIndex].nameColor,
+                    amount: it.amount,
+                    price: it.price,
+                    discount: it.discount,
+                    subTotal: `${it.price * it.amount * (100 - it.discount) / 100}`
+                }
+            })
+            return <Table
+                key={item.id}
+                style={{ margin: '30px 0' }}
+                pagination={{ position: ['none'] }}
+                title={() => <Descriptions
+                    items={
+                        [
+                            {
+                                key: item.id + 1,
+                                label: 'Order ID',
+                                children: item.id.toUpperCase()
+                            },
+                            {
+                                key: item.id + 2,
+                                label: 'Address',
+                                children: `${item.costumer.company}, ${item.costumer.towncity}, ${item.costumer.state}, ${item.costumer.country}, ${item.costumer.zip}`
+                            },
+                            {
+                                key: item.id + 3,
+                                label: 'Phone Number',
+                                children: item.costumer.phone
+                            },
+                            {
+                                key: item.id + 4,
+                                label: 'Date of Order',
+                                children: item.costumer.date
+                            }
+                        ]
+                    }
+                />}
                 dataSource={dataTable}
                 columns={columns}
-                title={() => <Descriptions items={
-                    [
-                        {
-                            key: '1',
-                            label: 'Order ID',
-                            children: ctm?.costumer.id.toUpperCase()
-                        },
-                        {
-                            key: '2',
-                            label: 'Date',
-                            children: ctm?.costumer.date
-                        }
-                    ]
-                } />}
                 summary={(pageData) => {
                     let sum = 0
                     pageData.forEach(({ subTotal }) => {
@@ -200,13 +211,13 @@ export default function DetailCustomer() {
                         <Table.Summary.Cell index={5}></Table.Summary.Cell>
                         <Table.Summary.Cell index={6}></Table.Summary.Cell>
                         <Table.Summary.Cell index={7}></Table.Summary.Cell>
-                        <Table.Summary.Cell index={8}>${sum}</Table.Summary.Cell>
+                        <Table.Summary.Cell index={8} align='center'>${sum.toFixed(2)}</Table.Summary.Cell>
                     </Table.Summary.Row>
                 }}
             >
 
             </Table>
-        </div>
+        })
     }
 
     const breadcrumb = [
@@ -217,14 +228,14 @@ export default function DetailCustomer() {
             title: <Link to={'/customer'}>Customers</Link>
         },
         {
-            title: <span style={{ color: 'var(--main)' }}>Customer Detail</span>
+            title: <span style={{ color: 'var(--main)' }}>Detail Customer</span>
         }
     ]
     return (
         <div>
-            <Header title={`${ctm?.costumer?.firstname} ${ctm?.costumer?.lastname}`} breadcrumb={breadcrumb} />
+            <Header title={id} breadcrumb={breadcrumb} />
             <div className='body-content'>
-                {renderCtmInfo()}
+                {/* {renderCtmInfo()} */}
                 {renderCtmCart()}
             </div>
         </div>

@@ -3,13 +3,15 @@ import Header from '../Components/Header'
 import { FirebaseContext } from '../Context/FirebaseProvider';
 import { onSnapshot, query } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Descriptions, Input, Space, Table } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from "react-highlight-words";
 import { useRef } from 'react';
 
 export default function Customer() {
     const [searchText, setSearchText] = useState('');
+    const [ctmList, setCtmList] = useState([])
+    const [uniqueCtm, setUniqueCtm] = useState([])
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const { customer } = useContext(FirebaseContext)
@@ -73,19 +75,6 @@ export default function Customer() {
                     >
                         Reset
                     </Button>
-                    {/* <Button
-                        type="link"
-                        size="small"
-                        onClick={() => {
-                            confirm({
-                                closeDropdown: false,
-                            });
-                            setSearchText(selectedKeys[0]);
-                            setSearchedColumn(dataIndex);
-                        }}
-                    >
-                        Filter
-                    </Button> */}
                     <Button
                         type="link"
                         size="small"
@@ -127,6 +116,51 @@ export default function Customer() {
                 text
             ),
     });
+
+    useEffect(() => {
+        let temp = []
+        customers.forEach((item) => {
+            temp.push(
+                {
+                    ctmName: `${item.costumer.firstname} ${item.costumer.lastname}`,
+                    ctmMail: item.costumer.customer,
+                    ctmOrder: [{
+                        id: item.id,
+                        date: item.costumer.date,
+                        phone: item.costumer.phone,
+                        note: item.costumer.note,
+                        address: `${item.costumer.company}, ${item.costumer.towncity}, ${item.costumer.state}, ${item.costumer.country}, ${item.costumer.zip}`
+                    }]
+                }
+            )
+            temp.sort((a, b) => a.ctmMail.localeCompare(b.ctmMail))
+            setCtmList(temp)
+        })
+    }, [customers])
+    useEffect(() => {
+        let temp = [...ctmList]
+        for (let i = 0; i < temp.length; i++) {
+            for (let j = 0; j != i && j < temp.length; j++) {
+                if (temp[i].ctmMail == temp[j].ctmMail) {
+                    temp[j].ctmOrder.forEach((item) => {
+                        temp[i].ctmOrder.push(
+                            {
+                                id: item.id,
+                                date: item.date,
+                                phone: item.phone,
+                                note: item.note,
+                                address: item.address
+                            }
+                        )
+                    })
+                    temp.splice(j, 1)
+                    setUniqueCtm(temp)
+                }
+            }
+        }
+    }, [ctmList])
+
+    console.log(uniqueCtm);
     const columns = [
 
         {
@@ -160,14 +194,14 @@ export default function Customer() {
         }
     ]
 
-    let dataTable = customers.map((item) => {
+    let dataTable = uniqueCtm.map((item) => {
         return {
-            key: item.id,
-            customerName: `${item.costumer.firstname} ${item.costumer.lastname}`,
-            mail: item.costumer.customer,
-            phone: item.costumer.phone,
-            address: `${item.costumer.house}, ${item.costumer.towncity}, ${item.costumer.state}, ${item.costumer.country}, ${item.costumer.zip}`,
-            // order: item.order
+            key: item.ctmMail,
+            customerName: item.ctmName,
+            mail: item.ctmMail,
+            phone: item.ctmOrder[0].phone,
+            address: item.ctmOrder[0].address,
+            order: item.ctmOrder
         }
     })
     // console.log(dataTable);
